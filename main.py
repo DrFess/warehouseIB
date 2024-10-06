@@ -5,6 +5,7 @@ from aiogram import Bot, Router, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from handlers import working_with_database
 from settings import TOKEN
 
 bot = Bot(token=TOKEN)
@@ -20,6 +21,7 @@ async def main():
     dp = Dispatcher()
     dp.include_routers(
         router,
+        working_with_database.router,
     )
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
