@@ -3,14 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Barcode Scanner</title>
+        <title>Сканер штрих-кода</title>
         <script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
     </head>
     <body>
-        <h1>Scan a Barcode</h1>
-        <div id="scanner-container" style="width: 100%; height: 400px;"></div>
+        <h1>Штрих-код</h1>
+        <div id="scanner-container" style="width: 100%; height: 200px;"></div>
         <p>Barcode: <span id="barcode-result"></span></p>
-        <button id="send-result" style="display: none;">Send to Telegram</button>
+        <button id="send-result" style="display: none;">Отправить в телеграм-бота</button>
 
         <script>
             // Инициализация сканера

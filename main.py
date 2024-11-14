@@ -1,7 +1,8 @@
 import asyncio
 import logging
 
-from aiogram import Bot, Router, Dispatcher
+from aiogram import Bot, Router, Dispatcher, F
+from aiogram.enums import ContentType
 from aiogram.filters import Command
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -19,6 +20,11 @@ async def command_start_handler(message: Message):
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text="Запустить сканер", web_app=WebAppInfo(url=web_app_url)))
     await message.answer("Нажмите на кнопку ниже, чтобы открыть сканер:", reply_markup=builder.as_markup())
+
+
+@router.message(F.content_type == ContentType.WEB_APP_DATA)
+async def web_app_handler(message: Message):
+    await message.answer(message.web_app_data)
 
 
 async def main():
