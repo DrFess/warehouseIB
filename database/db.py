@@ -46,14 +46,20 @@ def connection_to_DB_without_datetype(func):
 def create_tables(cursor, table_name: str):
     """Создание таблиц базы данных"""
     cursor.execute(
-        f"""CREATE TABLE IF NOT EXISTS {table_name}(
-                                            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                            telegram_id INTEGER,
-                                            surname TEXT,
-                                            name TEXT,
-                                            patronymic TEXT,
-                                            group_id INTEGER,
-                                            FOREIGN KEY (group_id) REFERENCES student_group(id) ON DELETE CASCADE
+        f"""CREATE TABLE IF NOT EXISTS manufacturers (
+                                                manufacturer_id INT PRIMARY KEY AUTO_INCREMENT,
+                                                manufacturer_name VARCHAR(255) NOT NULL,
+                                                location VARCHAR(255)
+        )""",
+    )
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS products (
+                                                product_id INT PRIMARY KEY AUTO_INCREMENT,
+                                                product_name VARCHAR(255) NOT NULL,
+                                                price_per_unit DECIMAL(10, 2),
+                                                weight_per_unit DECIMAL(10, 2),
+                                                manufacturer_id INT,
+                                                FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(manufacturer_id)
         )""",
     )
     return f'Таблица {table_name} создана'
