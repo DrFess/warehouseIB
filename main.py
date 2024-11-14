@@ -4,6 +4,7 @@ import logging
 from aiogram import Bot, Router, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from handlers import working_with_database
 from settings import TOKEN
@@ -14,12 +15,10 @@ router = Router()
 
 @router.message(Command(commands=['start']))
 async def command_start_handler(message: Message):
-    web_app_url = "https://username.github.io/your-repo/scanner.html"  # Укажи свою ссылку
-    keyboard = InlineKeyboardMarkup()
-    web_app_button = InlineKeyboardButton("Запустить сканер", web_app=WebAppInfo(url=web_app_url))
-    keyboard.add(web_app_button)
-
-    await message.answer("Нажмите на кнопку ниже, чтобы открыть сканер:", reply_markup=keyboard)
+    web_app_url = "https://drfess.github.io/warehouseIB/index.html"
+    builder = InlineKeyboardBuilder()
+    builder.row(InlineKeyboardButton(text="Запустить сканер", web_app=WebAppInfo(url=web_app_url)))
+    await message.answer("Нажмите на кнопку ниже, чтобы открыть сканер:", reply_markup=builder.as_markup())
 
 
 async def main():
