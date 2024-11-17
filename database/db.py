@@ -43,24 +43,72 @@ def connection_to_DB_without_datetype(func):
 
 
 @connection_to_DB
-def create_tables(cursor, table_name: str):
+def create_tables(cursor):
     """Создание таблиц базы данных"""
     cursor.execute(
         f"""CREATE TABLE IF NOT EXISTS manufacturers (
-                                                manufacturer_id INT PRIMARY KEY AUTO_INCREMENT,
-                                                manufacturer_name VARCHAR(255) NOT NULL,
-                                                location VARCHAR(255)
+                                                manufacturer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                manufacturer_title VARCHAR(255) NOT NULL,
+                                                address VARCHAR(255)
         )""",
     )
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS products (
-                                                product_id INT PRIMARY KEY AUTO_INCREMENT,
+                                                product_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                barcode INTEGER,
                                                 product_name VARCHAR(255) NOT NULL,
-                                                price_per_unit DECIMAL(10, 2),
+                                                price_product INTEGER,
                                                 weight_per_unit DECIMAL(10, 2),
-                                                manufacturer_id INT,
+                                                manufacturer_id INTEGER,
                                                 FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(manufacturer_id)
         )""",
     )
-    return f'Таблица {table_name} создана'
+    return 'База данных создана'
+
+
+@connection_to_DB
+def db_add_manufacturer(cursor, manufacturer_title: str, address: str) -> str:
+    """Добавление производителя"""
+    cursor.execute(
+        """INSERT INTO manufacturers (manufacturer_title, address)
+                                    VALUES (?, ?)""",
+        (manufacturer_title, address)
+    )
+    return f'Производитель {manufacturer_title} добавлен'
+
+
+@connection_to_DB
+def db_get_all_manufacturers(cursor):
+    """Получение всех производителей"""
+    cursor.execute(
+        """SELECT * FROM manufacturers"""
+    )
+    data = cursor.fetchall()
+    data_dict = {item[0]: {'title': item[1], 'address': item[2]} for item in data}
+    return data_dict
+
+
+@connection_to_DB
+def get_title_manufacturer(cursor, manufacturer_id: int):
+    cursor.execute(
+        """SELECT manufacturer_title FROM manufacturers
+                                WHERE manufacturer_id = ?""",
+        (manufacturer_id,)
+    )
+    return cursor.fetchone()[0]
+
+
+@connection_to_DB
+def db_add_product_without_barcode(cursor,
+                                   product_name: str,
+                                   price_product: float,
+                                   weight_per_unit: float,
+                                   manufacturer_id: int) -> str:
+    """Добавление товара"""
+    cursor.execute(
+        """INSERT INTO products (product_name, price_product, weight_per_unit, manufacturer_id)
+                               VALUES (?, ?, ?, ?)""",
+        (product_name, price_product, weight_per_unit, manufacturer_id)
+    )
+    return f'Товар {product_name} добавлен'
 
